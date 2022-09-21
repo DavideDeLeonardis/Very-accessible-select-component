@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 
-import useAccessibility from '../hooks/useAccessibility';
 import { SelectOption, SelectProps } from '../types';
+import useAccessibility from '../hooks/useAccessibility';
 
 import classes from './select.module.scss';
 
@@ -106,7 +106,10 @@ const Select = ({ multiple, value, onChange, options }: SelectProps) => {
          <div className={classes.divider}></div>
          <div className={classes.caret}></div>
          <ul
-            className={`${classes.options} ${selectIsOpen ? classes.show : ''}`}
+            className={`
+					${classes.options} 
+					${selectIsOpen ? classes.show : ''}
+				`}
          >
             {optionsElements}
          </ul>

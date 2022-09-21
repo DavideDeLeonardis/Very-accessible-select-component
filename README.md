@@ -1,2 +1,2 @@
-# React-TS Select Component
+# React-TypeScript Select Component
 

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
-import Select from './components/Select';
 import { SelectOption } from './types';
+import Select from './components/Select';
 
 import './index.scss';
 
@@ -21,21 +21,42 @@ function App() {
    return (
       <div className="container">
          <div>
-            <h2>Multiple Select</h2>
-            <Select
-               multiple
-               value={value1}
-               options={options}
-               onChange={(option) => setValue1(option)}
-            />
+            <div className="container-select">
+               <h2 className="h2">Multiple Custom Selection</h2>
+               <p className="h2p">
+                  Possibility of <u>multiple</u> option selection.
+               </p>
+               <Select
+                  multiple
+                  value={value1}
+                  options={options}
+                  onChange={(option) => setValue1(option)}
+               />
+            </div>
+            <div className="container-select">
+               <h2 className="h2">Single Custom Selection</h2>
+               <p className="h2p">Possibility of <u>single</u> option selection.</p>
+               <Select
+                  value={value2}
+                  options={options}
+                  onChange={(option) => setValue2(option)}
+               />
+            </div>
          </div>
+
          <div>
-            <h2>Normal Select</h2>
-            <Select
-               value={value2}
-               options={options}
-               onChange={(option) => setValue2(option)}
-            />
+            <h3 className="h3">ACCESSIBILITY COMMANDS</h3>
+            <p className="p">
+               - Press <span>TAB</span> for highlight the select.
+               <br />- Press <span>ENTER</span> or <span>SPACE</span> for open
+               the dropdown.
+               <br />- Move between options with <span>ARROWS</span>.
+               <br />- Select options pressing <span>ENTER</span> or{' '}
+               <span>SPACE</span>.
+               <br />
+               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- If option is alredy
+               selected, select it again will remove it.
+            </p>
          </div>
       </div>
    );
