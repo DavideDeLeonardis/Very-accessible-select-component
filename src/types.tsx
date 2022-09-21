@@ -18,3 +18,13 @@ export type MultipleSelectProps = {
 export type SelectProps = {
    options: SelectOption[];
 } & (SingleSelectProps | MultipleSelectProps);
+
+export type AccessiblityProps = {
+   containerRef: React.RefObject<HTMLDivElement>;
+   selectIsOpen: boolean;
+   setSelectIsOpen: (value: any) => void;
+   selectOption: (value: SelectOption) => void;
+   options: SelectOption[];
+   highlightedIndex: number;
+   setHighlightedIndex: (value: number) => void;
+};

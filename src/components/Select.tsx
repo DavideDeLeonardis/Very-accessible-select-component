@@ -1,17 +1,47 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
+import useAccessibility from '../hooks/useAccessibility';
 import { SelectOption, SelectProps } from '../types';
 
 import classes from './select.module.scss';
 
 const Select = ({ multiple, value, onChange, options }: SelectProps) => {
-   const [isOpen, setIsOpen] = useState(false);
+   const [selectIsOpen, setSelectIsOpen] = useState(false);
    // Highlighted options
    const [highlightedIndex, setHighlightedIndex] = useState(0);
+   // For keyboard events
+   const containerRef = useRef<HTMLDivElement>(null);
 
-   const openSelectHandler = () => setIsOpen((prev) => !prev);
+   const openSelectHandler = () => setSelectIsOpen((prev) => !prev);
 
-   const closeSelecthandler = () => setIsOpen(false);
+   const closeSelecthandler = () => setSelectIsOpen(false);
+
+   // Select option
+   const selectOption = (option: SelectOption) => {
+      if (multiple)
+         if (value.includes(option))
+            onChange(value.filter((o) => o !== option));
+         else onChange([...value, option]);
+      else if (option !== value) onChange(option);
+
+      setSelectIsOpen(false);
+   };
+
+   // Accessibility hook
+   useAccessibility({
+      containerRef,
+      selectIsOpen,
+      setSelectIsOpen,
+      selectOption,
+      options,
+      highlightedIndex,
+      setHighlightedIndex,
+   });
+
+   // Check if option is selected
+   const isOptionSelected = (option: SelectOption) => {
+      return multiple ? value.includes(option) : option === value;
+   };
 
    // Clear options
    const clearOptions = (e: React.MouseEvent<HTMLElement>) => {
@@ -19,31 +49,10 @@ const Select = ({ multiple, value, onChange, options }: SelectProps) => {
       multiple ? onChange([]) : onChange(undefined);
    };
 
-   // Select option
-   const selectOption = (
-      e: React.MouseEvent<HTMLElement>,
-      option: SelectOption
-   ) => {
-      e.stopPropagation();
-
-      if (multiple)
-         if (value.includes(option))
-            onChange(value.filter((o) => o !== option));
-         else onChange([...value, option]);
-      else if (option !== value) onChange(option);
-
-      setIsOpen(false);
-   };
-
-   // Check if option is selected
-   const isOptionSelected = (option: SelectOption) => {
-      return multiple ? value.includes(option) : option === value;
-   };
-
    // Reset highlighted option when select closes
    useEffect(() => {
-      if (isOpen) setHighlightedIndex(0);
-   }, [isOpen]);
+      if (selectIsOpen) setHighlightedIndex(0);
+   }, [selectIsOpen]);
 
    const optionsElements = options.map((option, index) => (
       <li
@@ -53,7 +62,10 @@ const Select = ({ multiple, value, onChange, options }: SelectProps) => {
 				${isOptionSelected(option) ? classes.selected : ''}
 				${index === highlightedIndex ? classes.highlighted : ''}
 			`}
-         onClick={(e) => selectOption(e, option)}
+         onClick={(e) => {
+            e.stopPropagation();
+            selectOption(option);
+         }}
          onMouseEnter={() => setHighlightedIndex(index)}
       >
          {option.label}
@@ -64,6 +76,7 @@ const Select = ({ multiple, value, onChange, options }: SelectProps) => {
       <div
          className={classes.container}
          tabIndex={0}
+         ref={containerRef}
          onClick={openSelectHandler}
          onBlur={closeSelecthandler}
       >
@@ -72,7 +85,10 @@ const Select = ({ multiple, value, onChange, options }: SelectProps) => {
                ? value.map((v) => (
                     <button
                        key={v.value}
-                       onClick={(e) => selectOption(e, v)}
+                       onClick={(e) => {
+                          e.stopPropagation();
+                          selectOption(v);
+                       }}
                        className={classes['option-badge']}
                     >
                        {v.label}
@@ -89,7 +105,9 @@ const Select = ({ multiple, value, onChange, options }: SelectProps) => {
          </button>
          <div className={classes.divider}></div>
          <div className={classes.caret}></div>
-         <ul className={`${classes.options} ${isOpen ? classes.show : ''}`}>
+         <ul
+            className={`${classes.options} ${selectIsOpen ? classes.show : ''}`}
+         >
             {optionsElements}
          </ul>
       </div>
