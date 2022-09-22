@@ -35,7 +35,9 @@ function App() {
             </div>
             <div className="container-select">
                <h2 className="h2">Single Custom Selection</h2>
-               <p className="h2p">Possibility of <u>single</u> option selection.</p>
+               <p className="h2p">
+                  Possibility of <u>single</u> option selection.
+               </p>
                <Select
                   value={value2}
                   options={options}
@@ -47,7 +49,8 @@ function App() {
          <div>
             <h3 className="h3">ACCESSIBILITY COMMANDS</h3>
             <p className="p">
-               - Press <span>TAB</span> for highlight the select.
+               - Press <span>TAB</span> for highlight selects and navigate
+               through page elements.
                <br />- Press <span>ENTER</span> or <span>SPACE</span> for open
                the dropdown.
                <br />- Move between options with <span>ARROWS</span>.
